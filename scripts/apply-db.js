@@ -13,6 +13,37 @@ const readline = require('readline');
 const { execSync } = require('child_process');
 const { Pool } = require('pg');
 
+const rootDir = path.resolve(__dirname, '..');
+
+// Load environment variables from .env if not already set in process.env
+function loadEnv() {
+  const envPath = path.join(rootDir, '.env');
+  if (fs.existsSync(envPath)) {
+    try {
+      const content = fs.readFileSync(envPath, 'utf8');
+      for (const line of content.split('\n')) {
+        const trimmed = line.trim();
+        if (!trimmed || trimmed.startsWith('#')) continue;
+        const eqIdx = trimmed.indexOf('=');
+        if (eqIdx !== -1) {
+          const key = trimmed.slice(0, eqIdx).trim();
+          let val = trimmed.slice(eqIdx + 1).trim();
+          if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
+            val = val.slice(1, -1);
+          }
+          if (process.env[key] === undefined) {
+            process.env[key] = val;
+          }
+        }
+      }
+    } catch {
+      // Ignore read errors
+    }
+  }
+}
+
+loadEnv();
+
 const args = process.argv.slice(2);
 const force = args.includes('--force') || args.includes('-f') || args.includes('--yes') || args.includes('-y');
 
@@ -24,11 +55,55 @@ function getArgValue(name, defaultVal) {
   return defaultVal;
 }
 
-const rootDir = path.resolve(__dirname, '..');
 const defaultPgUri = process.env.DATABASE_URL || 'postgresql://hrm_user:hrm_password@127.0.0.1:5432/hrm_db';
 const pgUri = getArgValue('--url', defaultPgUri);
 const defaultSqlPath = path.join(rootDir, 'data', 'init_data.sql');
 const sqlPath = path.resolve(rootDir, getArgValue('--sql', defaultSqlPath));
+
+// Extract user and password for non-interactive execution & diagnostics
+let dbUser = 'hrm_user';
+let dbPass = '';
+let dbHost = '127.0.0.1';
+let dbPort = '5432';
+let dbName = 'hrm_db';
+const uriMatch = pgUri.match(/postgresql:\/\/([^:]+):([^@]+)@([^:/]+):?([0-9]*)\/(.+)/);
+if (uriMatch) {
+  dbUser = decodeURIComponent(uriMatch[1]);
+  dbPass = decodeURIComponent(uriMatch[2]);
+  dbHost = uriMatch[3];
+  dbPort = uriMatch[4] || '5432';
+  dbName = uriMatch[5];
+}
+
+function handlePgError(err, phase) {
+  const isAuthError = err.code === '28P01' || (err.message && err.message.toLowerCase().includes('password authentication failed'));
+  const isConnRefused = err.code === 'ECONNREFUSED' || (err.message && err.message.includes('ECONNREFUSED'));
+  const isDbNotFound = err.code === '3D000' || (err.message && err.message.toLowerCase().includes('database') && err.message.toLowerCase().includes('does not exist'));
+
+  console.error(`\n[ERROR] Database error during ${phase}: ${err.message}`);
+  console.error('----------------------------------------------------');
+
+  if (isAuthError) {
+    console.error(`Diagnosis: Password authentication failed for user "${dbUser}".`);
+    console.error('To resolve this, run the following command on your server:');
+    console.error(`  sudo -u postgres psql -c "ALTER USER \\"${dbUser}\\" WITH PASSWORD '${dbPass || 'hrm_password'}' SUPERUSER CREATEDB;"`);
+    console.error('\nOr run the automated setup script to provision PostgreSQL:');
+    console.error('  sudo ./setup.sh --pg-only');
+    console.error('\nAlso verify that DATABASE_URL in .env matches:');
+    console.error(`  DATABASE_URL=postgresql://${dbUser}:${dbPass || 'hrm_password'}@${dbHost}:${dbPort}/${dbName}`);
+  } else if (isConnRefused) {
+    console.error(`Diagnosis: PostgreSQL service is not reachable on ${dbHost}:${dbPort}.`);
+    console.error('To start the PostgreSQL service, run:');
+    console.error('  sudo systemctl restart postgresql');
+  } else if (isDbNotFound) {
+    console.error(`Diagnosis: Database "${dbName}" does not exist.`);
+    console.error('To create it, run:');
+    console.error(`  sudo -u postgres psql -c "CREATE DATABASE ${dbName} OWNER \\"${dbUser}\\";"`);
+  } else {
+    console.error(`Details: ${err.stack || err.message}`);
+  }
+  console.error('----------------------------------------------------\n');
+}
 
 async function confirmPrompt(question) {
   const rl = readline.createInterface({
@@ -65,6 +140,11 @@ async function main() {
       hasData = true;
     }
   } catch (err) {
+    if (err.code === '28P01' || (err.message && err.message.toLowerCase().includes('password authentication failed'))) {
+      handlePgError(err, 'connection verification');
+      await pool.end();
+      process.exit(1);
+    }
     console.warn(`[WARN] Could not check existing tables: ${err.message}`);
   }
 
@@ -76,15 +156,6 @@ async function main() {
       await pool.end();
       process.exit(0);
     }
-  }
-
-  // Extract user and password for non-interactive execution
-  let dbUser = 'hrm_user';
-  let dbPass = '';
-  const userMatch = pgUri.match(/postgresql:\/\/([^:]+):([^@]+)@/);
-  if (userMatch) {
-    dbUser = decodeURIComponent(userMatch[1]);
-    dbPass = decodeURIComponent(userMatch[2]);
   }
 
   // If existing DB has data, create a safety dump first
@@ -123,7 +194,7 @@ async function main() {
     }
     console.log('--------------------------------\n');
   } catch (err) {
-    console.error(`[ERROR] Failed to apply database SQL:`, err);
+    handlePgError(err, 'SQL application');
     process.exit(1);
   } finally {
     await pool.end();

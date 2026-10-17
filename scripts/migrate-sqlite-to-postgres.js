@@ -6,7 +6,37 @@
 
 const Database = require('better-sqlite3');
 const { Pool } = require('pg');
-const path = require('path');
+const rootDir = path.resolve(__dirname, '..');
+
+// Load environment variables from .env if not already set in process.env
+function loadEnv() {
+  const envPath = path.join(rootDir, '.env');
+  if (fs.existsSync(envPath)) {
+    try {
+      const content = fs.readFileSync(envPath, 'utf8');
+      for (const line of content.split('\n')) {
+        const trimmed = line.trim();
+        if (!trimmed || trimmed.startsWith('#')) continue;
+        const eqIdx = trimmed.indexOf('=');
+        if (eqIdx !== -1) {
+          const key = trimmed.slice(0, eqIdx).trim();
+          let val = trimmed.slice(eqIdx + 1).trim();
+          if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
+            val = val.slice(1, -1);
+          }
+          if (process.env[key] === undefined) {
+            process.env[key] = val;
+          }
+        }
+      }
+    } catch {
+      // Ignore read errors
+    }
+  }
+}
+
+const fs = require('fs');
+loadEnv();
 
 const sqlitePath = process.argv[2] || process.env.DATABASE_PATH || path.join(__dirname, '..', 'data', 'hr.db');
 const pgUri = process.env.DATABASE_URL || 'postgresql://hrm_user:hrm_password@127.0.0.1:5432/hrm_db';
@@ -16,13 +46,25 @@ async function main() {
   console.log('  HESTRAHRM: SQLite -> PostgreSQL Migration');
   console.log('====================================================');
   console.log(`[Source SQLite]: ${sqlitePath}`);
-  console.log(`[Target Postgres]: ${pgUri}`);
+  console.log(`[Target Postgres]: ${pgUri.replace(/:[^:@]+@/, ':****@')}`);
 
   const sqlite = new Database(sqlitePath);
   const pg = new Pool({ connectionString: pgUri });
 
   // Test PG connection
-  const client = await pg.connect();
+  let client;
+  try {
+    client = await pg.connect();
+  } catch (err) {
+    console.error(`\n[ERROR] Failed to connect to PostgreSQL: ${err.message}`);
+    if (err.code === '28P01' || (err.message && err.message.toLowerCase().includes('password authentication failed'))) {
+      console.error('\nRun the following command to reset the PostgreSQL user password:');
+      console.error('  sudo -u postgres psql -c "ALTER USER hrm_user WITH PASSWORD \'hrm_password\' SUPERUSER CREATEDB;"');
+      console.error('Or run setup.sh:');
+      console.error('  sudo ./setup.sh --pg-only\n');
+    }
+    process.exit(1);
+  }
   console.log('[INFO] Connected to PostgreSQL successfully.');
 
   // Clean public schema

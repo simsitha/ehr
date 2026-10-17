@@ -1402,8 +1402,17 @@ apply_database_data() {
   log_success "Database initialization step complete."
 }
 
-# If --db-only was passed, apply db and exit
+# If --db-only was passed, ensure postgres is configured, apply db and exit
 if [ "$DB_ONLY" = true ]; then
+  if [ -f "${PROJECT_DIR}/.env" ]; then
+    set -a
+    # shellcheck disable=SC1091
+    source "${PROJECT_DIR}/.env" 2>/dev/null || true
+    set +a
+  fi
+  if [ "$SKIP_PG" = false ]; then
+    setup_postgresql_service
+  fi
   apply_database_data
   exit 0
 fi
