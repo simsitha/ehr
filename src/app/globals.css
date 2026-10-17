@@ -1,0 +1,771 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Kantumruy+Pro:ital,wght@0,100..700;1,100..700&family=Koh+Santepheap:wght@300;400;700;900&family=Moul&family=Noto+Sans+Khmer:wght@300;400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Inter', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, 'Kantumruy Pro', 'Noto Sans Khmer', sans-serif;
+  --font-heading: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  --font-khmer: 'Kantumruy Pro', 'Noto Sans Khmer', 'Koh Santepheap', 'Khmer OS Siemreap', 'Khmer OS Battambang', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-khmer-moul: 'Moul', 'Khmer OS Muol Light', 'Khmer OS Muol', cursive, serif;
+  --font-khmer-serif: 'Koh Santepheap', 'Khmer OS Siemreap', Georgia, serif;
+}
+
+:root {
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --font-standard: 'Inter', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, 'Kantumruy Pro', 'Noto Sans Khmer', sans-serif;
+  --font-mono-standard: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  --font-khmer-standard: 'Kantumruy Pro', 'Noto Sans Khmer', 'Koh Santepheap', 'Khmer OS Siemreap', 'Khmer OS Battambang', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-khmer-moul: 'Moul', 'Khmer OS Muol Light', 'Khmer OS Muol', cursive, serif;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-standard);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11", "kern" 1, "calt" 1;
+}
+
+/* Monospace & technical code elements */
+code, kbd, samp, pre, .font-mono {
+  font-family: var(--font-mono-standard) !important;
+  font-feature-settings: "liga" 0, "calt" 0, "zero" 1;
+}
+
+/* ==========================================================================
+   ENGLISH TYPOGRAPHY ENHANCEMENTS (High-Legibility Modern Enterprise Standard)
+   ========================================================================== */
+
+/* 1. Subtle optical tracking for English headings */
+:not(:lang(km)):not(.lang-km) h1,
+:not(:lang(km)):not(.lang-km) h2,
+:not(:lang(km)):not(.lang-km) h3 {
+  letter-spacing: -0.02em;
+}
+
+:not(:lang(km)):not(.lang-km) h4,
+:not(:lang(km)):not(.lang-km) h5,
+:not(:lang(km)):not(.lang-km) h6 {
+  letter-spacing: -0.01em;
+}
+
+/* 2. Tabular Numbers for Data Grids, Financials & Counters */
+.tabular-nums,
+table td,
+table th,
+[data-tabular="true"] {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1, "cv02" 1, "cv03" 1, "cv04" 1;
+}
+
+/* 3. Refined English font utility classes */
+.font-heading {
+  font-family: var(--font-heading, 'Plus Jakarta Sans', 'Inter', sans-serif);
+}
+
+.font-inter {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.font-jakarta {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* ==========================================================================
+   STANDARD KHMER TYPOGRAPHY & LEGIBILITY (Cambodian Banking & Enterprise Standard)
+   ========================================================================== */
+
+/* 1. Global Khmer language scope */
+:lang(km),
+.lang-km,
+[lang="km"] {
+  font-family: var(--font-khmer-standard);
+  line-height: 1.65;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+/* 2. Neutralize harmful letter-spacing on Khmer script
+   (Tailwind's tracking-tight / tracking-wider causes broken subscript consonants & dotted circles) */
+:lang(km),
+:lang(km) *,
+.lang-km,
+.lang-km *,
+[lang="km"],
+[lang="km"] * {
+  letter-spacing: normal !important;
+}
+
+/* 3. Khmer Headings: Clear line height & balanced weights */
+:lang(km) h1,
+:lang(km) h2,
+:lang(km) h3,
+:lang(km) h4,
+:lang(km) h5,
+:lang(km) h6,
+.lang-km h1,
+.lang-km h2,
+.lang-km h3,
+.lang-km h4,
+.lang-km h5,
+.lang-km h6 {
+  line-height: 1.45 !important;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+}
+
+/* 4. Subscript (ជើង - Coeng) Safety: Prevent vertical clipping in UI components */
+:lang(km) button,
+:lang(km) a,
+:lang(km) input,
+:lang(km) select,
+:lang(km) textarea,
+.lang-km button,
+.lang-km a,
+.lang-km input,
+.lang-km select,
+.lang-km textarea {
+  line-height: 1.5;
+}
+
+/* Ensure badges and small chips do not truncate lower diacritics / coengs */
+:lang(km) .badge,
+.lang-km .badge {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  line-height: 1.4;
+}
+
+/* Table cells vertical breathing room for subscript consonants */
+:lang(km) td,
+:lang(km) th,
+.lang-km td,
+.lang-km th {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  line-height: 1.5;
+}
+
+/* 5. Specialized Khmer Typography Utility Classes */
+.font-khmer {
+  font-family: var(--font-khmer-standard) !important;
+  letter-spacing: normal !important;
+}
+
+.font-khmer-moul {
+  font-family: var(--font-khmer-moul) !important;
+  font-weight: normal !important;
+  letter-spacing: normal !important;
+  line-height: 1.8 !important;
+}
+
+.font-khmer-serif {
+  font-family: 'Koh Santepheap', 'Khmer OS Siemreap', Georgia, serif !important;
+  letter-spacing: normal !important;
+}
+
+/* Custom modern scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Sidebar Boundary & Clean Navigation (Removes unwanted vertical lines and boundary scrollbars) */
+aside {
+  border-right: none !important;
+}
+
+header.glass-panel,
+footer.glass-panel {
+  border-left: none !important;
+  border-right: none !important;
+}
+
+/* Prevent unwanted vertical scrollbars at the sidebar boundary while preserving scrollability */
+.no-scrollbar::-webkit-scrollbar,
+aside nav::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.no-scrollbar,
+aside nav {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
+/* ==========================================================================
+   MODERN UI PRIMITIVES & GLASSMORPHISM
+   ========================================================================== */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(226, 232, 240, 0.7);
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.03);
+}
+
+.glass-dropdown {
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  box-shadow: 0 20px 30px -8px rgba(15, 23, 42, 0.12), 0 8px 12px -4px rgba(15, 23, 42, 0.04);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(226, 232, 240, 0.75);
+  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04), 0 10px 15px -3px rgba(15, 23, 42, 0.02);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px -4px rgba(15, 23, 42, 0.08), 0 4px 8px -2px rgba(15, 23, 42, 0.04);
+  border-color: rgba(99, 102, 241, 0.35);
+}
+
+.hover-lift {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+}
+
+.btn-press {
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-press:active {
+  transform: scale(0.97);
+}
+
+.app-mesh-bg {
+  background-image: 
+    radial-gradient(at 100% 0%, rgba(99, 102, 241, 0.07) 0px, transparent 45%),
+    radial-gradient(at 0% 100%, rgba(14, 165, 233, 0.06) 0px, transparent 50%),
+    radial-gradient(at 50% 20%, rgba(168, 85, 247, 0.04) 0px, transparent 40%),
+    radial-gradient(at 50% 80%, rgba(248, 250, 252, 0.8) 0px, transparent 100%);
+  background-attachment: fixed;
+}
+
+.glow-emerald {
+  box-shadow: 0 0 20px -2px rgba(16, 185, 129, 0.35);
+}
+
+.glow-indigo {
+  box-shadow: 0 0 24px -3px rgba(99, 102, 241, 0.32);
+}
+
+.glow-purple {
+  box-shadow: 0 0 24px -3px rgba(168, 85, 247, 0.32);
+}
+
+.gradient-text-indigo {
+  background: linear-gradient(135deg, #4f46e5 0%, #6366f1 50%, #06b6d4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gradient-text-emerald {
+  background: linear-gradient(135deg, #059669 0%, #10b981 50%, #14b8a6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Print styling for Payslip, Reports & Employee Dossier */
+.print-only {
+  display: none !important;
+}
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 10mm 12mm;
+  }
+
+  html,
+  html body,
+  html[data-theme="midnight"] body,
+  html[data-theme="indigo"] body,
+  .theme-midnight body,
+  .theme-indigo body,
+  body {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    background-image: none !important;
+    color: #0f172a !important;
+    font-size: 11pt !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  html[data-theme="midnight"] .bg-white,
+  html[data-theme="indigo"] .bg-white,
+  .bg-white {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+  }
+
+  html[data-theme="midnight"] .bg-slate-50,
+  html[data-theme="indigo"] .bg-slate-50,
+  .bg-slate-50 {
+    background-color: #f8fafc !important;
+  }
+
+  html[data-theme="midnight"] .border-slate-200,
+  html[data-theme="indigo"] .border-slate-200,
+  .border-slate-200 {
+    border-color: #e2e8f0 !important;
+  }
+
+  html[data-theme="midnight"] .border-slate-300,
+  html[data-theme="indigo"] .border-slate-300,
+  .border-slate-300 {
+    border-color: #cbd5e1 !important;
+  }
+
+  html[data-theme="midnight"] .text-slate-900,
+  html[data-theme="indigo"] .text-slate-900 {
+    color: #0f172a !important;
+  }
+
+  html[data-theme="midnight"] .text-slate-800,
+  html[data-theme="indigo"] .text-slate-800 {
+    color: #1e293b !important;
+  }
+
+  html[data-theme="midnight"] .text-slate-700,
+  html[data-theme="indigo"] .text-slate-700 {
+    color: #334155 !important;
+  }
+
+  html[data-theme="midnight"] .text-slate-600,
+  html[data-theme="indigo"] .text-slate-600 {
+    color: #475569 !important;
+  }
+
+  html[data-theme="midnight"] .text-slate-500,
+  html[data-theme="indigo"] .text-slate-500 {
+    color: #64748b !important;
+  }
+
+  .app-mesh-bg {
+    background: none !important;
+    background-image: none !important;
+  }
+  
+  .no-print {
+    display: none !important;
+  }
+  
+  .print-only {
+    display: block !important;
+  }
+
+  main {
+    margin-left: 0 !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+  }
+
+  main > div {
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .printable-letter-document {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+    min-height: auto !important;
+    overflow: visible !important;
+  }
+}
+
+/* ==========================================================================
+   GLOBAL MULTI-THEME ENGINE (Nordic, Midnight, Indigo)
+   Enables seamless, site-wide theming across all pages, shell, sidebar, and modals
+   ========================================================================== */
+
+/* 1. Midnight Obsidian (Dark / Pitch-Black Zinc) */
+html[data-theme="midnight"],
+.theme-midnight {
+  --background: #09090b;
+  --foreground: #f4f4f5;
+  color-scheme: dark;
+}
+
+html[data-theme="midnight"] body,
+.theme-midnight body {
+  background-color: #09090b !important;
+  color: #f4f4f5 !important;
+}
+
+html[data-theme="midnight"] aside,
+html[data-theme="midnight"] header,
+html[data-theme="midnight"] footer,
+html[data-theme="midnight"] main {
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+html[data-theme="midnight"] .bg-slate-50,
+html[data-theme="midnight"] .bg-slate-50\/50,
+html[data-theme="midnight"] .bg-slate-50\/60,
+html[data-theme="midnight"] .bg-slate-50\/70,
+html[data-theme="midnight"] .bg-slate-50\/80,
+html[data-theme="midnight"] .bg-slate-50\/90 {
+  background-color: #09090b !important;
+}
+
+html[data-theme="midnight"] .bg-white,
+html[data-theme="midnight"] .bg-white\/50,
+html[data-theme="midnight"] .bg-white\/80,
+html[data-theme="midnight"] .bg-white\/90 {
+  background-color: #121215 !important;
+}
+
+html[data-theme="midnight"] .bg-slate-100 {
+  background-color: #1c1c22 !important;
+}
+
+html[data-theme="midnight"] .bg-slate-200,
+html[data-theme="midnight"] .bg-slate-200\/60,
+html[data-theme="midnight"] .bg-slate-200\/80 {
+  background-color: #27272a !important;
+}
+
+html[data-theme="midnight"] .border-slate-100,
+html[data-theme="midnight"] .border-slate-200,
+html[data-theme="midnight"] .border-slate-200\/60,
+html[data-theme="midnight"] .border-slate-200\/70,
+html[data-theme="midnight"] .border-slate-200\/80,
+html[data-theme="midnight"] .border-slate-200\/90,
+html[data-theme="midnight"] .border-slate-300 {
+  border-color: #27272a !important;
+}
+
+html[data-theme="midnight"] .divide-slate-100 > :not([hidden]) ~ :not([hidden]),
+html[data-theme="midnight"] .divide-slate-200 > :not([hidden]) ~ :not([hidden]) {
+  border-color: #27272a !important;
+}
+
+html[data-theme="midnight"] .text-slate-900,
+html[data-theme="midnight"] .text-slate-800 {
+  color: #f4f4f5 !important;
+}
+
+html[data-theme="midnight"] .text-slate-700,
+html[data-theme="midnight"] .text-slate-600 {
+  color: #d4d4d8 !important;
+}
+
+html[data-theme="midnight"] .text-slate-500,
+html[data-theme="midnight"] .text-slate-400 {
+  color: #a1a1aa !important;
+}
+
+html[data-theme="midnight"] input:not([type="checkbox"]):not([type="radio"]),
+html[data-theme="midnight"] select,
+html[data-theme="midnight"] textarea {
+  background-color: #18181b !important;
+  color: #f4f4f5 !important;
+  border-color: #27272a !important;
+}
+
+html[data-theme="midnight"] input::placeholder,
+html[data-theme="midnight"] textarea::placeholder {
+  color: #71717a !important;
+}
+
+html[data-theme="midnight"] .hover\:bg-slate-50:hover,
+html[data-theme="midnight"] .hover\:bg-slate-50\/80:hover,
+html[data-theme="midnight"] .hover\:bg-slate-100:hover {
+  background-color: #1c1c22 !important;
+}
+
+html[data-theme="midnight"] .hover\:text-slate-900:hover,
+html[data-theme="midnight"] .hover\:text-slate-800:hover,
+html[data-theme="midnight"] .hover\:text-slate-700:hover {
+  color: #ffffff !important;
+}
+
+html[data-theme="midnight"] thead {
+  background-color: #18181b !important;
+}
+
+html[data-theme="midnight"] thead th {
+  color: #a1a1aa !important;
+}
+
+html[data-theme="midnight"] tr:hover {
+  background-color: rgba(39, 39, 42, 0.4) !important;
+}
+
+html[data-theme="midnight"] .bg-indigo-50 {
+  background-color: rgba(99, 102, 241, 0.16) !important;
+  color: #a5b4fc !important;
+  border-color: rgba(99, 102, 241, 0.35) !important;
+}
+
+html[data-theme="midnight"] .shadow-xs,
+html[data-theme="midnight"] .shadow-2xs,
+html[data-theme="midnight"] .shadow-sm,
+html[data-theme="midnight"] .shadow-md,
+html[data-theme="midnight"] .shadow-lg,
+html[data-theme="midnight"] .shadow-xl {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
+}
+
+html[data-theme="midnight"] ::-webkit-scrollbar-thumb {
+  background: #3f3f46;
+}
+
+html[data-theme="midnight"] ::-webkit-scrollbar-thumb:hover {
+  background: #52525b;
+}
+
+html[data-theme="midnight"] .glass-panel {
+  background: rgba(18, 18, 21, 0.88) !important;
+  border-color: rgba(39, 39, 42, 0.9) !important;
+}
+
+html[data-theme="midnight"] .glass-dropdown {
+  background: rgba(24, 24, 27, 0.96) !important;
+  border-color: rgba(39, 39, 42, 0.9) !important;
+}
+
+html[data-theme="midnight"] .app-mesh-bg {
+  background-image: 
+    radial-gradient(at 100% 0%, rgba(99, 102, 241, 0.12) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(168, 85, 247, 0.08) 0px, transparent 50%),
+    radial-gradient(at 50% 50%, rgba(9, 9, 11, 0.9) 0px, transparent 100%) !important;
+}
+
+/* 2. Indigo Electric (Deep Navy & Neon Cyan/Indigo Accents) */
+html[data-theme="indigo"],
+.theme-indigo {
+  --background: #080d1a;
+  --foreground: #f1f5f9;
+  color-scheme: dark;
+}
+
+html[data-theme="indigo"] body,
+.theme-indigo body {
+  background-color: #080d1a !important;
+  color: #f1f5f9 !important;
+}
+
+html[data-theme="indigo"] aside,
+html[data-theme="indigo"] header,
+html[data-theme="indigo"] footer,
+html[data-theme="indigo"] main {
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+html[data-theme="indigo"] .bg-slate-50,
+html[data-theme="indigo"] .bg-slate-50\/50,
+html[data-theme="indigo"] .bg-slate-50\/60,
+html[data-theme="indigo"] .bg-slate-50\/70,
+html[data-theme="indigo"] .bg-slate-50\/80,
+html[data-theme="indigo"] .bg-slate-50\/90 {
+  background-color: #080d1a !important;
+}
+
+html[data-theme="indigo"] .bg-white,
+html[data-theme="indigo"] .bg-white\/50,
+html[data-theme="indigo"] .bg-white\/80,
+html[data-theme="indigo"] .bg-white\/90 {
+  background-color: #0f172a !important;
+}
+
+html[data-theme="indigo"] .bg-slate-100 {
+  background-color: #172033 !important;
+}
+
+html[data-theme="indigo"] .bg-slate-200,
+html[data-theme="indigo"] .bg-slate-200\/60,
+html[data-theme="indigo"] .bg-slate-200\/80 {
+  background-color: #1e293b !important;
+}
+
+html[data-theme="indigo"] .border-slate-100,
+html[data-theme="indigo"] .border-slate-200,
+html[data-theme="indigo"] .border-slate-200\/60,
+html[data-theme="indigo"] .border-slate-200\/70,
+html[data-theme="indigo"] .border-slate-200\/80,
+html[data-theme="indigo"] .border-slate-200\/90,
+html[data-theme="indigo"] .border-slate-300 {
+  border-color: #1e293b !important;
+}
+
+html[data-theme="indigo"] .divide-slate-100 > :not([hidden]) ~ :not([hidden]),
+html[data-theme="indigo"] .divide-slate-200 > :not([hidden]) ~ :not([hidden]) {
+  border-color: #1e293b !important;
+}
+
+html[data-theme="indigo"] .text-slate-900,
+html[data-theme="indigo"] .text-slate-800 {
+  color: #f8fafc !important;
+}
+
+html[data-theme="indigo"] .text-slate-700,
+html[data-theme="indigo"] .text-slate-600 {
+  color: #cbd5e1 !important;
+}
+
+html[data-theme="indigo"] .text-slate-500,
+html[data-theme="indigo"] .text-slate-400 {
+  color: #94a3b8 !important;
+}
+
+html[data-theme="indigo"] input:not([type="checkbox"]):not([type="radio"]),
+html[data-theme="indigo"] select,
+html[data-theme="indigo"] textarea {
+  background-color: #131c31 !important;
+  color: #f8fafc !important;
+  border-color: #1e293b !important;
+}
+
+html[data-theme="indigo"] input::placeholder,
+html[data-theme="indigo"] textarea::placeholder {
+  color: #64748b !important;
+}
+
+html[data-theme="indigo"] .hover\:bg-slate-50:hover,
+html[data-theme="indigo"] .hover\:bg-slate-50\/80:hover,
+html[data-theme="indigo"] .hover\:bg-slate-100:hover {
+  background-color: #17233d !important;
+}
+
+html[data-theme="indigo"] .hover\:text-slate-900:hover,
+html[data-theme="indigo"] .hover\:text-slate-800:hover,
+html[data-theme="indigo"] .hover\:text-slate-700:hover {
+  color: #ffffff !important;
+}
+
+html[data-theme="indigo"] thead {
+  background-color: #131c31 !important;
+}
+
+html[data-theme="indigo"] thead th {
+  color: #94a3b8 !important;
+}
+
+html[data-theme="indigo"] tr:hover {
+  background-color: rgba(30, 41, 59, 0.5) !important;
+}
+
+html[data-theme="indigo"] .bg-indigo-50 {
+  background-color: rgba(99, 102, 241, 0.2) !important;
+  color: #818cf8 !important;
+  border-color: rgba(99, 102, 241, 0.4) !important;
+}
+
+html[data-theme="indigo"] .shadow-xs,
+html[data-theme="indigo"] .shadow-2xs,
+html[data-theme="indigo"] .shadow-sm,
+html[data-theme="indigo"] .shadow-md,
+html[data-theme="indigo"] .shadow-lg,
+html[data-theme="indigo"] .shadow-xl {
+  box-shadow: 0 4px 20px rgba(2, 6, 23, 0.6) !important;
+}
+
+html[data-theme="indigo"] ::-webkit-scrollbar-thumb {
+  background: #334155;
+}
+
+html[data-theme="indigo"] ::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+html[data-theme="indigo"] .glass-panel {
+  background: rgba(15, 23, 42, 0.88) !important;
+  border-color: rgba(30, 41, 59, 0.9) !important;
+}
+
+html[data-theme="indigo"] .glass-dropdown {
+  background: rgba(19, 28, 49, 0.96) !important;
+  border-color: rgba(30, 41, 59, 0.9) !important;
+}
+
+html[data-theme="indigo"] .app-mesh-bg {
+  background-image: 
+    radial-gradient(at 100% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(6, 182, 212, 0.08) 0px, transparent 50%),
+    radial-gradient(at 50% 50%, rgba(8, 13, 26, 0.9) 0px, transparent 100%) !important;
+}
+
+html[data-theme="nordic"],
+.theme-nordic {
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  color-scheme: light;
+}
+
+/* ==========================================================================
+   FULLSCREEN MODE STYLING
+   ========================================================================== */
+:fullscreen {
+  background-color: #f8fafc;
+}
+
+html[data-theme="midnight"]:fullscreen,
+html[data-theme="midnight"] :fullscreen,
+html[data-theme="indigo"]:fullscreen,
+html[data-theme="indigo"] :fullscreen {
+  background-color: #0b0f19;
+}
+
+/* ==========================================================================
+   COLLAPSIBLE PAYROLL HEADER ANIMATIONS
+   ========================================================================== */
+.collapsible-header-container {
+  display: grid;
+  grid-template-rows: 1fr;
+  transition: grid-template-rows 250ms cubic-bezier(0.4, 0, 0.2, 1), opacity 200ms ease-in-out;
+  opacity: 1;
+}
+
+.collapsible-header-container.is-collapsed {
+  grid-template-rows: 0fr;
+  opacity: 0;
+  pointer-events: none;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.collapsible-header-content {
+  overflow: hidden;
+  min-height: 0;
+}
+

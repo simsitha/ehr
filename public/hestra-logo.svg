@@ -1,0 +1,39 @@
+<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="hestraBg" x1="0" y1="0" x2="44" y2="44" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#4338ca" />
+      <stop offset="45%" stop-color="#4f46e5" />
+      <stop offset="100%" stop-color="#312e81" />
+    </linearGradient>
+    <linearGradient id="hestraGold" x1="12" y1="18" x2="32" y2="26" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#fbbf24" />
+      <stop offset="100%" stop-color="#f59e0b" />
+    </linearGradient>
+    <linearGradient id="hestraPillar" x1="0" y1="0" x2="0" y2="44" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#e0e7ff" />
+    </linearGradient>
+  </defs>
+
+  <rect width="44" height="44" rx="13" fill="url(#hestraBg)" />
+  <circle cx="44" cy="0" r="18" fill="#6366f1" fill-opacity="0.25" />
+  <circle cx="0" cy="44" r="14" fill="#f59e0b" fill-opacity="0.15" />
+
+  <path
+    d="M12 11C12 9.89543 12.8954 9 14 9H16.5C17.6046 9 18.5 9.89543 18.5 11V33C18.5 34.1046 17.6046 35 16.5 35H14C12.8954 35 12 34.1046 12 33V11Z"
+    fill="url(#hestraPillar)"
+  />
+
+  <path
+    d="M25.5 11C25.5 9.89543 26.3954 9 27.5 9H30C31.1046 9 32 9.89543 32 11V33C32 34.1046 31.1046 35 30 35H27.5C26.3954 35 25.5 34.1046 25.5 33V11Z"
+    fill="url(#hestraPillar)"
+  />
+
+  <path
+    d="M18.5 20H25.5V24H18.5V20Z"
+    fill="url(#hestraGold)"
+  />
+  
+  <circle cx="22" cy="22" r="2.2" fill="#ffffff" />
+  <circle cx="34.5" cy="9.5" r="2.5" fill="#f59e0b" stroke="#ffffff" stroke-width="1" />
+</svg>

@@ -1,0 +1,21 @@
+services:
+  cambodia-hrms:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cambodia-hr-system
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - HOST=0.0.0.0
+      - AUTH_SECRET=cambodia_hrms_super_secure_secret_token_2026_hestrahrm
+      - DATABASE_PATH=/app/data/hr.db
+    volumes:
+      - hr-data:/app/data
+
+volumes:
+  hr-data:
+    driver: local
