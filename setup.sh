@@ -1585,7 +1585,6 @@ if [ ! -f "${PROJECT_DIR}/.env" ]; then
     cp "${PROJECT_DIR}/.env.example" "${PROJECT_DIR}/.env"
     log_info "Created .env from .env.example"
   else
-    local auto_secret
     auto_secret="$(openssl rand -hex 32 2>/dev/null || tr -dc 'A-Za-z0-9' </dev/urandom 2>/dev/null | head -c 48 || echo "cambodia_hrms_super_secure_secret_token_2026_hestrahrm")"
     cat << EOF > "${PROJECT_DIR}/.env"
 PORT=${app_port}
@@ -1663,7 +1662,6 @@ fi
 
 # Auto-generate secure AUTH_SECRET if still using the default placeholder
 if grep -q "^AUTH_SECRET=cambodia_hrms_super_secure_secret_token_2026_hestrahrm" "${PROJECT_DIR}/.env"; then
-  local new_secret
   new_secret="$(openssl rand -hex 32 2>/dev/null || tr -dc 'A-Za-z0-9' </dev/urandom 2>/dev/null | head -c 48 || true)"
   if [ -n "$new_secret" ]; then
     sed -i "s/^AUTH_SECRET=.*/AUTH_SECRET=${new_secret}/" "${PROJECT_DIR}/.env"
